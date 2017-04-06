@@ -1,0 +1,237 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Tue May 03 11:00:01 AST 2016
+  Author:  momar
+  Type: BPEL 1.1 Process
+  Purpose: Asynchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="Momra_CSI_Process"
+         targetNamespace="http://xmlns.oracle.com/Momra_CSI/Momra_CSI_3/Momra_CSI_Process"
+         xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:client="http://xmlns.oracle.com/Momra_CSI/Momra_CSI_3/Momra_CSI_Process"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:ns1="http://www.isb-me.com/webServices/ISB-WS-LF/"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/Momra_CSI/Momra_CSI/CSI_DB"
+         xmlns:bpel2="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/db/sp/CSI_DB"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+    <partnerLinks>
+        <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="momra_csi_Service" partnerLinkType="client:Momra_CSI_Process" myRole="Momra_CSI_ProcessProvider" partnerRole="Momra_CSI_ProcessRequester"/>
+        <partnerLink name="CSI_DB" partnerLinkType="ns2:CSI_DB_plt"
+                     partnerRole="CSI_DB_role"/>
+        <partnerLink name="LFCM_Service" partnerLinkType="ns1:LFCM_Service"
+                     partnerRole="Integration_MOMRA_MUNSoap"/>
+    </partnerLinks>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VARIABLES                                                        
+        List of messages and XML documents used within this BPEL process 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="client:Momra_CSI_ProcessRequestMessage"/>
+
+        <!-- Reference to the message that will be sent back to the requester during callback -->
+        <variable name="outputVariable" messageType="client:Momra_CSI_ProcessResponseMessage"/>
+        <variable name="Invoke_CSI_DB_CSI_DB_InputVariable"
+                  messageType="ns2:args_in_msg"/>
+        <variable name="Invoke_CSI_DB_CSI_DB_OutputVariable"
+                  messageType="ns2:args_out_msg"/>
+        <variable name="laserficheVariable"
+                  element="ns3:CSI_Laserfiche_Parameters"/>
+        <variable name="InvokeLaserfiche_ImportImage_InputVariable"
+                  messageType="ns1:ImportImageSoapIn"/>
+        <variable name="InvokeLaserfiche_ImportImage_OutputVariable"
+                  messageType="ns1:ImportImageSoapOut"/>
+    </variables>
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       ORCHESTRATION LOGIC                                               
+       Set of activities coordinating the flow of messages across the    
+       services integrated within this business process                  
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in Momra_CSI_Process.wsdl) -->
+        <receive name="receiveInput" partnerLink="momra_csi_Service" portType="client:Momra_CSI_Process" operation="process" variable="inputVariable" createInstance="yes"/>
+        <assign name="AssignInput">
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns3:CSI_InputParameters/ns3:P_SIDE_CODE"/>
+                <to variable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                    part="InputParameters"
+                    query="/ns3:InputParameters/ns3:P_SIDE_CODE"/>
+            </copy>
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns3:CSI_InputParameters/ns3:P_SECRET"/>
+                <to variable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                    part="InputParameters"
+                    query="/ns3:InputParameters/ns3:P_SECRET"/>
+            </copy>
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns3:CSI_InputParameters/ns3:P_STATUS_CODE"/>
+                <to variable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                    part="InputParameters"
+                    query="/ns3:InputParameters/ns3:P_STATUS_CODE"/>
+            </copy>
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns3:CSI_InputParameters/ns3:P_RECEIVED_CODE"/>
+                <to variable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                    part="InputParameters"
+                    query="/ns3:InputParameters/ns3:P_RECEIVED_CODE"/>
+            </copy>
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns3:CSI_InputParameters/ns3:P_DOCUMENT_SUBJECT"/>
+                <to variable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                    part="InputParameters"
+                    query="/ns3:InputParameters/ns3:P_DOCUMENT_SUBJECT"/>
+            </copy>
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns3:CSI_InputParameters/ns3:P_INCOME_NUM"/>
+                <to variable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                    part="InputParameters"
+                    query="/ns3:InputParameters/ns3:P_INCOME_NUM"/>
+            </copy>
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns3:CSI_InputParameters/ns3:P_INCOME_DATE"/>
+                <to variable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                    part="InputParameters"
+                    query="/ns3:InputParameters/ns3:P_INCOME_DATE"/>
+            </copy>
+            <copy>
+                <from expression="ora:getCompositeInstanceId()"/>
+                <to variable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                    part="InputParameters"
+                    query="/ns3:InputParameters/ns3:P_SOA_INSTANCE_ID"/>
+            </copy>
+        </assign>
+        <invoke name="Invoke_CSI_DB"
+                inputVariable="Invoke_CSI_DB_CSI_DB_InputVariable"
+                outputVariable="Invoke_CSI_DB_CSI_DB_OutputVariable"
+                partnerLink="CSI_DB" portType="ns2:CSI_DB_ptt"
+                operation="CSI_DB" bpelx:invokeAsDetail="no"/>
+        <assign name="AssignDBOutToLaserfiche">
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns3:CSI_InputParameters/ns3:P_DOCUMENT"/>
+                <to variable="InvokeLaserfiche_ImportImage_InputVariable"
+                    part="parameters" query="/ns1:ImportImage/ns1:Images"/>
+            </copy>
+            <copy>
+                <from expression='"77626-009-0000007-41700"'/>
+                <to variable="InvokeLaserfiche_ImportImage_InputVariable"
+                    part="parameters" query="/ns1:ImportImage/ns1:AuthID"/>
+            </copy>
+            <copy>
+                <from expression="concat(&quot;وارد الأمانات\\&quot;,bpws:getVariableData('Invoke_CSI_DB_CSI_DB_OutputVariable','OutputParameters','/ns3:OutputParameters/ns3:P_SIDE_NAME'),&quot;\\&quot;,substring(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_OutputVariable','OutputParameters','/ns3:OutputParameters/ns3:P_DOCUMENT_DATE'),1,4),&quot;\\&quot;,substring(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_OutputVariable','OutputParameters','/ns3:OutputParameters/ns3:P_DOCUMENT_DATE'),5,2))"/>
+                <to variable="InvokeLaserfiche_ImportImage_InputVariable"
+                    part="parameters"
+                    query="/ns1:ImportImage/ns1:SavingLocation"/>
+            </copy>
+            <copy>
+                <from expression='"Tif"'/>
+                <to variable="InvokeLaserfiche_ImportImage_InputVariable"
+                    part="parameters" query="/ns1:ImportImage/ns1:DocumentExt"/>
+            </copy>
+            <copy>
+                <from expression='"رقم الوارد##تاريخ الوارد##الجهة المستلمة##رقم الخطاب##تاريخ الخطاب##جهة الوارد##الوارد - الموضوع"'/>
+                <to variable="InvokeLaserfiche_ImportImage_InputVariable"
+                    part="parameters" query="/ns1:ImportImage/ns1:FieldNames"/>
+            </copy>
+            <copy>
+                <from expression="concat(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_OutputVariable','OutputParameters','/ns3:OutputParameters/ns3:P_DISPLAY_SERIAL_NUM'),&quot;##&quot;,concat(substring(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_OutputVariable','OutputParameters','/ns3:OutputParameters/ns3:P_DOCUMENT_DATE'),7,4) ,&quot;-&quot;,substring(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_OutputVariable','OutputParameters','/ns3:OutputParameters/ns3:P_DOCUMENT_DATE'),4,2) ,&quot;-&quot;,substring(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_OutputVariable','OutputParameters','/ns3:OutputParameters/ns3:P_DOCUMENT_DATE'),1,2)),&quot;##&quot;,bpws:getVariableData('Invoke_CSI_DB_CSI_DB_InputVariable','InputParameters','/ns3:InputParameters/ns3:P_RECEIVED_CODE'),&quot;##&quot;,bpws:getVariableData('Invoke_CSI_DB_CSI_DB_InputVariable','InputParameters','/ns3:InputParameters/ns3:P_INCOME_NUM'),&quot;##&quot;,concat(substring(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_InputVariable','InputParameters','/ns3:InputParameters/ns3:P_INCOME_DATE'),1,4) ,&quot;-&quot;,substring(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_InputVariable','InputParameters','/ns3:InputParameters/ns3:P_INCOME_DATE'),5,2) ,&quot;-&quot;,substring(bpws:getVariableData('Invoke_CSI_DB_CSI_DB_InputVariable','InputParameters','/ns3:InputParameters/ns3:P_INCOME_DATE'),7,2)),&quot;##&quot;,bpws:getVariableData('Invoke_CSI_DB_CSI_DB_InputVariable','InputParameters','/ns3:InputParameters/ns3:P_SIDE_CODE'),&quot;##&quot;,bpws:getVariableData('Invoke_CSI_DB_CSI_DB_InputVariable','InputParameters','/ns3:InputParameters/ns3:P_DOCUMENT_SUBJECT'))"/>
+                <to variable="InvokeLaserfiche_ImportImage_InputVariable"
+                    part="parameters" query="/ns1:ImportImage/ns1:FieldValues"/>
+            </copy>
+            <copy>
+                <from expression='"1"'/>
+                <to variable="InvokeLaserfiche_ImportImage_InputVariable"
+                    part="parameters"
+                    query="/ns1:ImportImage/ns1:SavingLocationType"/>
+            </copy>
+            <copy>
+                <from expression='"الوارد"'/>
+                <to variable="InvokeLaserfiche_ImportImage_InputVariable"
+                    part="parameters" query="/ns1:ImportImage/ns1:TempName"/>
+            </copy>
+        </assign>
+        <invoke name="InvokeLaserfiche"
+                inputVariable="InvokeLaserfiche_ImportImage_InputVariable"
+                partnerLink="LFCM_Service"
+                portType="ns1:Integration_MOMRA_MUNSoap"
+                operation="ImportImage"
+                outputVariable="InvokeLaserfiche_ImportImage_OutputVariable"
+                bpelx:invokeAsDetail="no"/>
+        <assign name="AssignResponce">
+            <copy>
+                <from variable="Invoke_CSI_DB_CSI_DB_OutputVariable"
+                      part="OutputParameters"
+                      query="/ns3:OutputParameters/ns3:P_DISPLAY_SERIAL_NUM"/>
+                <to variable="outputVariable" part="payload"
+                    query="/ns3:CSI_OutputParameters/ns3:P_DISPLAY_SERIAL_NUM"/>
+            </copy>
+            <copy>
+                <from variable="Invoke_CSI_DB_CSI_DB_OutputVariable"
+                      part="OutputParameters"
+                      query="/ns3:OutputParameters/ns3:P_DOCUMENT_DATE"/>
+                <to variable="outputVariable" part="payload"
+                    query="/ns3:CSI_OutputParameters/ns3:P_DOCUMENT_DATE"/>
+            </copy>
+            <copy>
+                <from variable="Invoke_CSI_DB_CSI_DB_OutputVariable"
+                      part="OutputParameters"
+                      query="/ns3:OutputParameters/ns3:P_SIDE_NAME"/>
+                <to variable="outputVariable" part="payload"
+                    query="/ns3:CSI_OutputParameters/ns3:P_SIDE_NAME"/>
+            </copy>
+            <copy>
+                <from expression='"2"'/>
+                <to variable="outputVariable" part="payload"
+                    query="/ns3:CSI_OutputParameters/ns3:P_SYSTEM_TYPE"/>
+            </copy>
+        </assign>
+        <reply name="Reply1" variable="outputVariable"
+               partnerLink="momra_csi_Service"
+               portType="client:Momra_CSI_Process" operation="process"/>
+        <!-- 
+          Asynchronous callback to the requester. (Note: the callback location and correlation id is transparently handled using WS-addressing.)
+        -->
+        <invoke name="callbackClient" partnerLink="momra_csi_Service" portType="client:Momra_CSI_ProcessCallback" operation="processResponse" inputVariable="outputVariable"
+                bpelx:invokeAsDetail="no"/>
+    </sequence>
+</process>

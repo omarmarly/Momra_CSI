@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions targetNamespace="http://www.isb-me.com/webServices/ISB-WS-LF/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.isb-me.com/webServices/ISB-WS-LF/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap12/">
+  <WL5G3N0:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.isb-me.com/webServices/ISB-WS-LF/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:WL5G3N3="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://www.isb-me.com/webServices/ISB-WS-LF/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+      <s:element name="ExportImage">
+        <s:complexType>
+          <s:sequence>
+            <s:element maxOccurs="1" minOccurs="0" name="AuthID" type="s:string"/>
+            <s:element maxOccurs="1" minOccurs="1" name="TocID" type="s:int"/>
+            <s:element maxOccurs="1" minOccurs="0" name="SaveImageToLocation" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExportImageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element maxOccurs="1" minOccurs="0" name="ExportImageResult" type="s:base64Binary"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="testImportImage">
+        <s:complexType>
+          <s:sequence>
+            <s:element maxOccurs="1" minOccurs="0" name="ImageLocation" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="testImportImageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element maxOccurs="1" minOccurs="1" name="testImportImageResult" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ImportImage">
+        <s:complexType>
+          <s:sequence>
+            <s:element maxOccurs="1" minOccurs="0" name="AuthID" type="s:string"/>
+            <s:element maxOccurs="1" minOccurs="0" name="Images" type="s:base64Binary"/>
+            <s:element maxOccurs="1" minOccurs="0" name="SavingLocation" type="s:string"/>
+            <s:element maxOccurs="1" minOccurs="0" name="DocumentName" type="s:string"/>
+            <s:element maxOccurs="1" minOccurs="0" name="DocumentExt" type="s:string"/>
+            <s:element maxOccurs="1" minOccurs="0" name="FieldNames" type="s:string"/>
+            <s:element maxOccurs="1" minOccurs="0" name="FieldValues" type="s:string"/>
+            <s:element maxOccurs="1" minOccurs="1" name="SavingLocationType" type="s:short"/>
+            <s:element maxOccurs="1" minOccurs="0" name="TempName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ImportImageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element maxOccurs="1" minOccurs="1" name="ImportImageResult" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="ExportImageSoapIn">
+    <WL5G3N0:part element="WL5G3N1:ExportImage" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="ExportImageSoapOut">
+    <WL5G3N0:part element="WL5G3N1:ExportImageResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="testImportImageSoapIn">
+    <WL5G3N0:part element="WL5G3N1:testImportImage" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="testImportImageSoapOut">
+    <WL5G3N0:part element="WL5G3N1:testImportImageResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="ImportImageSoapIn">
+    <WL5G3N0:part element="WL5G3N1:ImportImage" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="ImportImageSoapOut">
+    <WL5G3N0:part element="WL5G3N1:ImportImageResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="Integration_MOMRA_MUNSoap">
+    <WL5G3N0:operation name="ExportImage">
+      <WL5G3N0:input message="WL5G3N1:ExportImageSoapIn"/>
+      <WL5G3N0:output message="WL5G3N1:ExportImageSoapOut"/>
+    </WL5G3N0:operation>
+    <WL5G3N0:operation name="testImportImage">
+      <WL5G3N0:input message="WL5G3N1:testImportImageSoapIn"/>
+      <WL5G3N0:output message="WL5G3N1:testImportImageSoapOut"/>
+    </WL5G3N0:operation>
+    <WL5G3N0:operation name="ImportImage">
+      <WL5G3N0:input message="WL5G3N1:ImportImageSoapIn"/>
+      <WL5G3N0:output message="WL5G3N1:ImportImageSoapOut"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="Integration_MOMRA_MUNSoap12" type="WL5G3N1:Integration_MOMRA_MUNSoap">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="ExportImage">
+      <WL5G3N2:operation soapAction="http://www.isb-me.com/webServices/ISB-WS-LF/ExportImage" style="document"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+    <WL5G3N0:operation name="testImportImage">
+      <WL5G3N2:operation soapAction="http://www.isb-me.com/webServices/ISB-WS-LF/testImportImage" style="document"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+    <WL5G3N0:operation name="ImportImage">
+      <WL5G3N2:operation soapAction="http://www.isb-me.com/webServices/ISB-WS-LF/ImportImage" style="document"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="Integration_MOMRA_MUN">
+    <WL5G3N0:port binding="WL5G3N1:Integration_MOMRA_MUNSoap12" name="Integration_MOMRA_MUNSoap12">
+      <WL5G3N2:address location="http://eosb.momra.gov.sa:80/ESB/LFCM_Proxy_Service"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

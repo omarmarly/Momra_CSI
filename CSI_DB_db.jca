@@ -1,0 +1,14 @@
+<adapter-config name="CSI_DB" adapter="Database Adapter" wsdlLocation="CSI_DB.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+  
+  <connection-factory location="eis/DB/csi" UIConnectionName="CSI_Conn" adapterRef=""/>
+  <endpoint-interaction portType="CSI_DB_ptt" operation="CSI_DB">
+    <interaction-spec className="oracle.tip.adapter.db.DBStoredProcedureInteractionSpec">
+      <property name="SchemaName" value="MOMRA"/>
+      <property name="PackageName" value="INTEGRAT_WITH_AMANAT"/>
+      <property name="ProcedureName" value="INSERT_WARED_DOCUMENTS"/>
+      <property name="GetActiveUnitOfWork" value="false"/>
+    </interaction-spec>
+    <output/>
+  </endpoint-interaction>
+
+</adapter-config>

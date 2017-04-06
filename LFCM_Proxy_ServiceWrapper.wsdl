@@ -1,0 +1,17 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+    
+     targetNamespace="http://www.isb-me.com/webServices/ISB-WS-LF/"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:WL5G3N1="http://www.isb-me.com/webServices/ISB-WS-LF/"
+    >
+    <plnk:partnerLinkType name="LFCM_Service">
+        <plnk:role name="Integration_MOMRA_MUNSoap">
+            <plnk:portType name="WL5G3N1:Integration_MOMRA_MUNSoap"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+    <wsdl:import namespace="http://www.isb-me.com/webServices/ISB-WS-LF/" location="http://ruhmpv-soa01.momra.net:8011/ESB/LFCM_Proxy_Service?wsdl"/>
+</wsdl:definitions>

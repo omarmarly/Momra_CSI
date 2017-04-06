@@ -1,0 +1,11 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<weblogic-connector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://www.bea.com/ns/weblogic/weblogic-connector http://www.bea.com/ns/weblogic/weblogic-connector/1.0/weblogic-connector.xsd"
+                    xmlns="http://www.bea.com/ns/weblogic/weblogic-connector">
+<properties>
+    <property>
+      <name>nonRetriableErrorCodes </name>
+      <value>-2049</value>
+    </property>
+  </properties>                    
+</weblogic-connector>

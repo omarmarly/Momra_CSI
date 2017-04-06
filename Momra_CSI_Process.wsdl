@@ -1,0 +1,42 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+     name="Momra_CSI_Process"
+     targetNamespace="http://xmlns.oracle.com/Momra_CSI/Momra_CSI_3/Momra_CSI_Process"
+     xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/sp/CSI_DB"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:client="http://xmlns.oracle.com/Momra_CSI/Momra_CSI_3/Momra_CSI_Process"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+    <plnk:partnerLinkType name="Momra_CSI_Process">
+        <plnk:role name="Momra_CSI_ProcessProvider">
+            <plnk:portType name="client:Momra_CSI_Process"/>
+        </plnk:role>
+        <plnk:role name="Momra_CSI_ProcessRequester">
+            <plnk:portType name="client:Momra_CSI_ProcessCallback"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/sp/CSI_DB"
+             xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:client="http://xmlns.oracle.com/Momra_CSI/Momra_CSI_3/Momra_CSI_Process"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/sp/CSI_DB" schemaLocation="xsd/CSI_Service.xsd"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="Momra_CSI_ProcessResponseMessage">
+        <wsdl:part name="payload" element="ns1:CSI_OutputParameters"/>
+    </wsdl:message>
+    <wsdl:message name="Momra_CSI_ProcessRequestMessage">
+        <wsdl:part name="payload" element="ns1:CSI_InputParameters"/>
+    </wsdl:message>
+    <wsdl:portType name="Momra_CSI_ProcessCallback">
+        <wsdl:operation name="processResponse">
+            <wsdl:input message="client:Momra_CSI_ProcessResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:portType name="Momra_CSI_Process">
+        <wsdl:operation name="process">
+            <wsdl:input message="client:Momra_CSI_ProcessRequestMessage"/>
+            <wsdl:output message="client:Momra_CSI_ProcessResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
